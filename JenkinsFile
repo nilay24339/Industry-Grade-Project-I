@@ -1,39 +1,56 @@
-// This Jenkinsfile defines a continuous integration pipeline for a Maven-based Java project.
 pipeline {
-    // Defines where the entire pipeline will execute. 'any' means Jenkins will use any available agent.
     agent any
 
-    // The stages block contains a sequence of stages for the build process.
     stages {
-        // 1. Code Checkout Stage: Fetches the source code from the specified Git repository.
         stage('Code Checkout') {
             steps {
-                // Uses the 'git' step to clone the repository.
                 git 'https://github.com/nilay24339/Industry-Grade-Project-I.git'
             }
         }
 
-        // 2. Code Compile Stage: Compiles the Java source code using Maven.
         stage('Code Compile') {
             steps {
-                // Executes the 'mvn compile' command using the 'sh' step (shell).
                 sh 'mvn compile'
             }
         }
 
-        // 3. Unit Test Stage: Executes all unit tests within the project.
-        stage('Unit Test') {
+        stage('Test') {
             steps {
-                // Executes the 'mvn test' command.
                 sh 'mvn test'
             }
         }
 
-        // 4. Code Packaging Stage: Creates the final build artifact (e.g., a JAR or WAR file).
-        stage('Code packaging') {
+        stage('Build') {
             steps {
-                // Executes the 'mvn package' command.
                 sh 'mvn package'
+            }
+        }
+        
+        stage('Check Workspace') {
+            steps {
+                // List files in the workspace to verify Dockerfile presence
+                sh 'ls -l'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Adjust the Dockerfile path below if it is not in root (e.g., docker/Dockerfile)
+                sh 'docker build -t nilay2497/abc_tech:$BUILD_NUMBER .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: "dockerhub-token-jenkins", url: "") {
+                    sh 'docker push nilay2497/abc_tech:$BUILD_NUMBER'
+                }
+            }
+        }
+
+        stage('Deploy as container') {
+            steps {
+                sh 'docker run -itd -P nilay2497/abc_tech:$BUILD_NUMBER'
             }
         }
     }
