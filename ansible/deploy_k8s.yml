@@ -7,9 +7,11 @@
         kubeconfig: /root/.kube/config
         state: present
         src: /opt/ansible/k8s/deployment.yml
+        namespace: default     # ✅ added namespace
 
     - name: Apply Service manifest
       k8s:
         kubeconfig: /root/.kube/config
         state: present
         src: /opt/ansible/k8s/service.yml
+        namespace: default     # ✅ added namespace
