@@ -4,14 +4,15 @@
   tasks:
     - name: Apply Deployment manifest
       k8s:
-        kubeconfig: /root/.kube/config
+        kubeconfig: /var/lib/jenkins/.kube/config
         state: present
         src: /opt/ansible/k8s/deployment.yml
-        namespace: default     # ✅ added namespace
+        namespace: default
 
     - name: Apply Service manifest
       k8s:
-        kubeconfig: /root/.kube/config
+        kubeconfig: /var/lib/jenkins/.kube/config
         state: present
         src: /opt/ansible/k8s/service.yml
-        namespace: default     # ✅ added namespace
+        namespace: default
+
