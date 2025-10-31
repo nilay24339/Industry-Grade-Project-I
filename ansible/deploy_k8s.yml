@@ -1,20 +1,19 @@
----
 - name: Deploy Docker app to Kubernetes
   hosts: localhost
-  connection: local      # Run tasks locally, no SSH
+  connection: local    # run locally, no SSH
   gather_facts: yes
 
   tasks:
     - name: Apply Deployment manifest
       k8s:
-        kubeconfig: /var/lib/jenkins/.kube/config
+        kubeconfig: "{{ lookup('env','KUBECONFIG') }}"
         state: present
         src: /opt/ansible/k8s/deployment.yml
         namespace: default
 
     - name: Apply Service manifest
       k8s:
-        kubeconfig: /var/lib/jenkins/.kube/config
+        kubeconfig: "{{ lookup('env','KUBECONFIG') }}"
         state: present
         src: /opt/ansible/k8s/service.yml
         namespace: default
