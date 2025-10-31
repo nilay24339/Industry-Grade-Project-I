@@ -1,0 +1,24 @@
+---
+- name: Deploy Docker app to Kubernetes
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Pull latest k8s manifests from GitHub
+      git:
+        repo: 'https://github.com/nilay24339/Industry-Grade-Project-I.git'
+        dest: /opt/ansible/k8s
+        version: main
+        force: yes
+
+    - name: Apply Deployment manifest
+      k8s:
+        kubeconfig: /root/.kube/config
+        state: present
+        src: /opt/ansible/k8s/k8s/deployment.yml
+
+    - name: Apply Service manifest
+      k8s:
+        kubeconfig: /root/.kube/config
+        state: present
+        src: /opt/ansible/k8s/k8s/service.yml
