@@ -2,7 +2,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: abc-tech-deployment
-  namespace: default     # ✅ add this line
+  namespace: default
+  labels:
+    app: abc-tech
 spec:
   replicas: 2
   selector:

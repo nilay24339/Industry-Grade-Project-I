@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: abc-tech-service
-  namespace: default   # ✅ add this line
+  namespace: default
 spec:
   selector:
     app: abc-tech

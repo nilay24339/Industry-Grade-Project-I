@@ -1,18 +1,32 @@
+---
 - name: Deploy Docker app to Kubernetes
   hosts: localhost
-  connection: local    # run locally, no SSH
+  connection: local                 # run locally - no SSH
   gather_facts: yes
 
+  vars:
+    ansible_python_interpreter: /opt/ansible/venv/bin/python  # venv created earlier
+
   tasks:
+    - name: Ensure k8s manifests exist
+      stat:
+        path: /opt/ansible/k8s/deployment.yml
+      register: dep_stat
+
+    - name: Fail if deployment manifest not found
+      fail:
+        msg: "Deployment manifest not found at /opt/ansible/k8s/deployment.yml"
+      when: not dep_stat.stat.exists
+
     - name: Apply Deployment manifest
-      k8s:
+      kubernetes.core.k8s:
         kubeconfig: "{{ lookup('env','KUBECONFIG') }}"
         state: present
         src: /opt/ansible/k8s/deployment.yml
         namespace: default
 
     - name: Apply Service manifest
-      k8s:
+      kubernetes.core.k8s:
         kubeconfig: "{{ lookup('env','KUBECONFIG') }}"
         state: present
         src: /opt/ansible/k8s/service.yml
