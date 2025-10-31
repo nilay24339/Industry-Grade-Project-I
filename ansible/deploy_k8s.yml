@@ -1,6 +1,9 @@
 ---
 - name: Deploy Docker app to Kubernetes
   hosts: localhost
+  connection: local      # Run tasks locally, no SSH
+  gather_facts: yes
+
   tasks:
     - name: Apply Deployment manifest
       k8s:
