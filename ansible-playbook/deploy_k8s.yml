@@ -1,0 +1,15 @@
+---
+- name: Deploy Docker app to Kubernetes
+  hosts: localhost
+  tasks:
+    - name: Apply Deployment manifest
+      k8s:
+        kubeconfig: /root/.kube/config
+        state: present
+        src: /opt/ansible/k8s/deployment.yml
+
+    - name: Apply Service manifest
+      k8s:
+        kubeconfig: /root/.kube/config
+        state: present
+        src: /opt/ansible/k8s/service.yml
